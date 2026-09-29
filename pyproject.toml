@@ -1,0 +1,45 @@
+[project]
+name = "roomos-homeassistant"
+version = "0.1.0"
+description = "Home Assistant integration for Cisco RoomOS devices"
+readme = "README.md"
+requires-python = ">=3.14.2"
+# The integration itself has no runtime dependencies: it speaks the RoomOS
+# JSON-RPC xAPI over the aiohttp WebSocket client Home Assistant ships.
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest-homeassistant-custom-component",
+    "ruff",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "ASYNC", # async mistakes — blocking calls in the event loop
+    "B",     # bugbear
+    "C4",    # comprehensions
+    "E",     # pycodestyle errors
+    "F",     # pyflakes
+    "I",     # import sorting
+    "PGH",   # blanket noqa / type: ignore
+    "PIE",
+    "RUF",
+    "SIM",
+    "T20",   # no print()
+    "UP",    # pyupgrade
+    "W",
+]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["custom_components.cisco_roomos"]
+combine-as-imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

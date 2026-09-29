@@ -1,0 +1,56 @@
+command:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: cisco_roomos
+    command:
+      required: true
+      example: "Audio Volume Set"
+      selector:
+        text:
+    params:
+      example: '{"Level": 30}'
+      selector:
+        object:
+
+set_configuration:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: cisco_roomos
+    path:
+      required: true
+      example: "Audio DefaultVolume"
+      selector:
+        text:
+    value:
+      required: true
+      example: 40
+      selector:
+        text:
+
+dial:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: cisco_roomos
+    number:
+      required: true
+      example: "someone@example.webex.com"
+      selector:
+        text:
+    protocol:
+      example: "Spark"
+      selector:
+        select:
+          options:
+            - "Auto"
+            - "Sip"
+            - "Spark"
+            - "H323"

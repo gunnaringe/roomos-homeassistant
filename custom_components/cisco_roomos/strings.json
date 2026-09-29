@@ -1,0 +1,257 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a Cisco RoomOS device",
+        "description": "The device must have the WebSocket service enabled (`xConfiguration NetworkServices Websocket: FollowHTTPService`, the default on most RoomOS versions). Use a local device user with the Admin or Integrator role; Integrator is enough for everything this integration does.",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "verify_ssl": "Verify SSL certificate"
+        },
+        "data_description": {
+          "host": "IP address or hostname of the device.",
+          "verify_ssl": "Leave off unless the device has a certificate your Home Assistant trusts. Devices ship with a self-signed one."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate {name}",
+        "description": "The device rejected the stored credentials.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure device",
+        "data": {
+          "host": "Host",
+          "username": "Username",
+          "password": "Password",
+          "verify_ssl": "Verify SSL certificate"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect. Check the host and that the WebSocket service is enabled on the device.",
+      "invalid_auth": "Invalid username or password.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This device is already configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "reconfigure_successful": "Reconfiguration was successful.",
+      "wrong_device": "That address belongs to a different device."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "air_quality_index": {
+        "name": "Air quality index"
+      },
+      "ambient_noise": {
+        "name": "Ambient noise"
+      },
+      "sound_level": {
+        "name": "Sound level"
+      },
+      "people_count": {
+        "name": "People count",
+        "unit_of_measurement": "people"
+      },
+      "standby_state": {
+        "name": "Standby state",
+        "state": {
+          "off": "Awake",
+          "halfwake": "Half wake",
+          "enteringstandby": "Entering standby",
+          "standby": "Standby"
+        }
+      },
+      "call_status": {
+        "name": "Call status",
+        "state": {
+          "idle": "Idle",
+          "dialling": "Dialling",
+          "ringing": "Ringing",
+          "connecting": "Connecting",
+          "connected": "Connected",
+          "disconnecting": "Disconnecting",
+          "onhold": "On hold",
+          "earlymedia": "Early media",
+          "preserved": "Preserved",
+          "remotepreserved": "Remote preserved"
+        },
+        "state_attributes": {
+          "remote_number": {
+            "name": "Remote number"
+          },
+          "display_name": {
+            "name": "Display name"
+          },
+          "direction": {
+            "name": "Direction"
+          },
+          "call_type": {
+            "name": "Call type"
+          },
+          "protocol": {
+            "name": "Protocol"
+          }
+        }
+      },
+      "webex_presence": {
+        "name": "Webex presence",
+        "state_attributes": {
+          "custom_status": {
+            "name": "Custom status"
+          }
+        }
+      },
+      "booking_availability": {
+        "name": "Booking availability",
+        "state_attributes": {
+          "until": {
+            "name": "Until"
+          }
+        }
+      },
+      "last_boot": {
+        "name": "Last boot"
+      },
+      "software_version": {
+        "name": "Software version"
+      },
+      "ip_address": {
+        "name": "IP address"
+      }
+    },
+    "binary_sensor": {
+      "in_call": {
+        "name": "In call"
+      },
+      "room_in_use": {
+        "name": "Room in use"
+      },
+      "people_presence": {
+        "name": "People presence"
+      },
+      "close_proximity": {
+        "name": "Close proximity"
+      },
+      "presenting": {
+        "name": "Presenting"
+      },
+      "screen_on": {
+        "name": "Screen on"
+      },
+      "camera_lid": {
+        "name": "Camera lid"
+      },
+      "smoke_alarm": {
+        "name": "Smoke alarm heard"
+      },
+      "webex_registered": {
+        "name": "Webex registered"
+      }
+    },
+    "switch": {
+      "microphone_mute": {
+        "name": "Microphone mute"
+      },
+      "speaker_mute": {
+        "name": "Speaker mute"
+      },
+      "do_not_disturb": {
+        "name": "Do not disturb"
+      },
+      "selfview": {
+        "name": "Selfview"
+      }
+    },
+    "number": {
+      "volume_level": {
+        "name": "Volume"
+      }
+    },
+    "button": {
+      "wake": {
+        "name": "Wake"
+      },
+      "standby": {
+        "name": "Standby"
+      },
+      "halfwake": {
+        "name": "Half wake"
+      },
+      "hang_up": {
+        "name": "Hang up"
+      }
+    }
+  },
+  "exceptions": {
+    "unknown_device": {
+      "message": "The selected device is not a Cisco RoomOS device."
+    },
+    "not_loaded": {
+      "message": "The device is not connected."
+    }
+  },
+  "services": {
+    "command": {
+      "name": "Run xCommand",
+      "description": "Runs any xCommand on the device and returns the result.",
+      "fields": {
+        "device_id": {
+          "name": "Device",
+          "description": "The RoomOS device."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Command path without the xCommand prefix, e.g. `Audio Volume Set`."
+        },
+        "params": {
+          "name": "Parameters",
+          "description": "Command arguments as a mapping, e.g. `Level: 30`."
+        }
+      }
+    },
+    "set_configuration": {
+      "name": "Set configuration",
+      "description": "Sets an xConfiguration value.",
+      "fields": {
+        "device_id": {
+          "name": "Device",
+          "description": "The RoomOS device."
+        },
+        "path": {
+          "name": "Path",
+          "description": "Configuration path, e.g. `Audio DefaultVolume`."
+        },
+        "value": {
+          "name": "Value",
+          "description": "New value."
+        }
+      }
+    },
+    "dial": {
+      "name": "Dial",
+      "description": "Starts a call.",
+      "fields": {
+        "device_id": {
+          "name": "Device",
+          "description": "The RoomOS device."
+        },
+        "number": {
+          "name": "Number",
+          "description": "Number or URI to call."
+        },
+        "protocol": {
+          "name": "Protocol",
+          "description": "Call protocol; leave empty for the device default."
+        }
+      }
+    }
+  }
+}

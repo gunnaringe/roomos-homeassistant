@@ -1,0 +1,54 @@
+[hooks]
+
+[[hooks.hook]]
+id = "trailing-whitespace"
+stages = ["commit"]
+description = "Trim trailing whitespace"
+
+[[hooks.hook]]
+id = "end-of-file-fixer"
+stages = ["commit"]
+description = "Fix end of file"
+
+[[hooks.hook]]
+id = "check-yaml"
+stages = ["commit"]
+description = "Check YAML syntax"
+
+[[hooks.hook]]
+id = "check-json"
+stages = ["commit"]
+description = "Check JSON syntax"
+
+[[hooks.hook]]
+id = "check-merge-conflict"
+stages = ["commit"]
+description = "Check for merge conflicts"
+
+[[hooks.hook]]
+id = "ruff-check"
+name = "ruff check"
+entry = "ruff check"
+language = "system"
+types = ["python"]
+stages = ["commit"]
+description = "Lint Python with ruff"
+
+[[hooks.hook]]
+id = "ruff-format"
+name = "ruff format"
+entry = "ruff format"
+language = "system"
+types = ["python"]
+stages = ["commit"]
+description = "Format Python with ruff"
+
+[[hooks.hook]]
+id = "hassfest"
+name = "hassfest"
+entry = "python -m homeassistant.scripts.hassfest --validate-default"
+language = "system"
+types = ["python"]
+stages = ["commit"]
+pass_filenames = false
+description = "Validate Home Assistant integration"

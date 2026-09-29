@@ -1,0 +1,31 @@
+[tools]
+python = "3.14"
+uv = "latest"
+ruff = "latest"
+prek = "latest"
+
+[env]
+# Use the mise-provided interpreter instead of letting uv download its own,
+# which would silently ignore the pin above.
+UV_PYTHON_PREFERENCE = "only-system"
+
+[tasks.test]
+description = "Run the test suite"
+run = "uv run pytest"
+
+[tasks.lint]
+description = "Lint and check formatting"
+run = ["ruff check .", "ruff format --check ."]
+
+[tasks.format]
+description = "Apply formatting"
+run = ["ruff format .", "ruff check --fix ."]
+
+
+[tasks.setup-hooks]
+description = "Install prek git hooks"
+run = "prek install"
+
+[tasks.hooks]
+description = "Run prek hooks on all files"
+run = "prek run --all-files"

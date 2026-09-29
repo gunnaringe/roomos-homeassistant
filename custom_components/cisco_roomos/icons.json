@@ -1,0 +1,124 @@
+{
+  "entity": {
+    "sensor": {
+      "air_quality_index": {
+        "default": "mdi:air-filter"
+      },
+      "ambient_noise": {
+        "default": "mdi:volume-vibrate"
+      },
+      "sound_level": {
+        "default": "mdi:waveform"
+      },
+      "people_count": {
+        "default": "mdi:account-group"
+      },
+      "standby_state": {
+        "default": "mdi:monitor",
+        "state": {
+          "standby": "mdi:monitor-off",
+          "enteringstandby": "mdi:monitor-off"
+        }
+      },
+      "call_status": {
+        "default": "mdi:phone",
+        "state": {
+          "idle": "mdi:phone-hangup",
+          "ringing": "mdi:phone-ring",
+          "connected": "mdi:phone-in-talk"
+        }
+      },
+      "webex_presence": {
+        "default": "mdi:account-badge"
+      },
+      "booking_availability": {
+        "default": "mdi:calendar-clock"
+      },
+      "software_version": {
+        "default": "mdi:package-up"
+      },
+      "ip_address": {
+        "default": "mdi:ip-network"
+      }
+    },
+    "binary_sensor": {
+      "in_call": {
+        "default": "mdi:video-off",
+        "state": {
+          "on": "mdi:video"
+        }
+      },
+      "close_proximity": {
+        "default": "mdi:account-arrow-left"
+      },
+      "presenting": {
+        "default": "mdi:presentation"
+      },
+      "screen_on": {
+        "default": "mdi:monitor-off",
+        "state": {
+          "on": "mdi:monitor"
+        }
+      },
+      "camera_lid": {
+        "default": "mdi:webcam-off",
+        "state": {
+          "on": "mdi:webcam"
+        }
+      }
+    },
+    "switch": {
+      "microphone_mute": {
+        "default": "mdi:microphone",
+        "state": {
+          "on": "mdi:microphone-off"
+        }
+      },
+      "speaker_mute": {
+        "default": "mdi:volume-high",
+        "state": {
+          "on": "mdi:volume-off"
+        }
+      },
+      "do_not_disturb": {
+        "default": "mdi:minus-circle-outline",
+        "state": {
+          "on": "mdi:minus-circle"
+        }
+      },
+      "selfview": {
+        "default": "mdi:account-box-outline"
+      }
+    },
+    "number": {
+      "volume_level": {
+        "default": "mdi:volume-high"
+      }
+    },
+    "button": {
+      "wake": {
+        "default": "mdi:monitor"
+      },
+      "standby": {
+        "default": "mdi:monitor-off"
+      },
+      "halfwake": {
+        "default": "mdi:monitor-small"
+      },
+      "hang_up": {
+        "default": "mdi:phone-hangup"
+      }
+    }
+  },
+  "services": {
+    "command": {
+      "service": "mdi:console"
+    },
+    "set_configuration": {
+      "service": "mdi:cog"
+    },
+    "dial": {
+      "service": "mdi:phone-outgoing"
+    }
+  }
+}

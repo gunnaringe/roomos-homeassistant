@@ -1,0 +1,226 @@
+{
+  "Audio": {
+    "Devices": {
+      "Bluetooth": {
+        "ActiveProfile": "None"
+      },
+      "HandsetUSB": {
+        "ConnectionStatus": "NotConnected",
+        "Cradle": "OnHook"
+      },
+      "HeadsetUSB": {
+        "ConnectionStatus": "NotConnected",
+        "Description": "",
+        "Manufacturer": ""
+      }
+    },
+    "Input": {
+      "Connectors": {
+        "Microphone": [
+          {
+            "id": 1,
+            "Mute": "Off"
+          }
+        ],
+        "USBC": [
+          {
+            "id": 1,
+            "Mute": "On"
+          }
+        ]
+      }
+    },
+    "Microphones": {
+      "MusicMode": "Off",
+      "Mute": "Off",
+      "NoiseRemoval": "Off",
+      "VoiceActivityDetector": {
+        "Activity": "False"
+      }
+    },
+    "Output": {
+      "MeasuredHdmiArcDelay": 0,
+      "MeasuredHdmiDelay": 0,
+      "ReportedHdmiCecDelay": 0
+    },
+    "SelectedDevice": "Internal",
+    "USB": {
+      "ConnectionStatus": {
+        "Capture": "NotConnected",
+        "Playback": "NotConnected"
+      },
+      "Product": "",
+      "SerialNumber": "",
+      "TerminalType": {
+        "Capture": "",
+        "Playback": ""
+      }
+    },
+    "Ultrasound": {
+      "Volume": 70
+    },
+    "Volume": 30,
+    "VolumeHandsetUsb": 50,
+    "VolumeHeadsetBluetooth": 50,
+    "VolumeHeadsetUsb": 50,
+    "VolumeInternal": 30,
+    "VolumeMute": "Off"
+  },
+  "Bookings": {
+    "Availability": {
+      "Status": "FreeUntil",
+      "TimeStamp": "2026-09-29T12:05:00Z"
+    },
+    "Current": {
+      "Id": ""
+    }
+  },
+  "Conference": {
+    "DoNotDisturb": "Inactive",
+    "HideNonVideo": {
+      "Active": "False",
+      "Available": "False"
+    },
+    "Multipoint": {
+      "Mode": "CUCMMediaResourceGroupList"
+    },
+    "PeopleFocus": {
+      "Active": "False",
+      "Available": "False"
+    },
+    "Presentation": {
+      "CallId": 0,
+      "Mode": "Off",
+      "Whiteboard": {
+        "BoardUrl": "",
+        "Mode": "Off",
+        "TranscodingSelected": "NotApplicable"
+      }
+    },
+    "SelectedCallProtocol": "Spark",
+    "SpeakerLock": {
+      "CallId": 0,
+      "Mode": "Auto"
+    }
+  },
+  "Network": [
+    {
+      "id": 1,
+      "Ethernet": {
+        "MacAddress": "00:11:22:33:44:55",
+        "Speed": "1000full"
+      },
+      "IPv4": {
+        "Address": "192.0.2.21",
+        "Gateway": "192.0.2.1",
+        "SubnetMask": "255.255.255.0"
+      }
+    }
+  ],
+  "RoomAnalytics": {
+    "AmbientNoise": {
+      "Level": {
+        "A": 28
+      }
+    },
+    "AmbientTemperature": 23.1,
+    "Engagement": {
+      "CloseProximity": "False"
+    },
+    "InsideRoom": {
+      "AirQualityIndex": "Unavailable",
+      "AmbientTemperature": 23.1,
+      "RelativeHumidity": 50
+    },
+    "LightingConditions": "Unknown",
+    "OutsideRoom": {
+      "AirQualityIndex": "Unavailable",
+      "AmbientTemperature": "Unavailable",
+      "RelativeHumidity": -1
+    },
+    "PeopleCount": {
+      "Capacity": 1,
+      "Current": -1
+    },
+    "PeoplePresence": "No",
+    "RelativeHumidity": 50,
+    "RoomInUse": "False",
+    "Sound": {
+      "Level": {
+        "A": 28
+      }
+    },
+    "T3Alarm": {
+      "Detected": "False"
+    },
+    "UltrasoundPresence": "No"
+  },
+  "Standby": {
+    "Level": "Networked",
+    "State": "Standby"
+  },
+  "SystemUnit": {
+    "BroadcastName": "Office Desk Mini",
+    "DeveloperPreview": {
+      "Mode": "Off"
+    },
+    "Hardware": {
+      "Module": {
+        "SerialNumber": "FOC0000TEST"
+      },
+      "Monitoring": {
+        "Temperature": {
+          "Status": "Normal"
+        }
+      }
+    },
+    "LastShutdownReason": "Upgrade",
+    "LastShutdownTime": "2026-09-09T22:13:20Z",
+    "ProductId": "Cisco Desk Mini",
+    "ProductPlatform": "Desk Mini",
+    "ProductType": "Cisco Codec",
+    "Software": {
+      "DisplayName": "RoomOS 26.9.1.4 a9266a24c91",
+      "Name": "s53300",
+      "OptionKeys": {
+        "DeveloperPreview": "False",
+        "Encryption": "True",
+        "MultiSite": "False",
+        "RemoteMonitoring": "False"
+      },
+      "ReleaseDate": "2026-09-04",
+      "Version": "ce26.9.1.4.a9266a24c91"
+    },
+    "State": {
+      "CameraLid": "Open",
+      "NumberOfActiveCalls": 0,
+      "NumberOfInProgressCalls": 0,
+      "NumberOfSuspendedCalls": 0,
+      "Subsystem": {
+        "Application": "Initialized"
+      },
+      "System": "Initialized"
+    },
+    "Uptime": 1689943
+  },
+  "Time": {
+    "SystemTime": "2026-09-29T13:40:02+0200"
+  },
+  "Video": {
+    "Selfview": {
+      "FullscreenMode": "Off",
+      "Mode": "Off",
+      "OnMonitorRole": "First",
+      "PIPPosition": "CenterRight"
+    }
+  },
+  "Webex": {
+    "Status": "Registered",
+    "Services": {
+      "UserPresence": {
+        "Status": "Active",
+        "CustomStatus": "Working from home"
+      }
+    }
+  }
+}
