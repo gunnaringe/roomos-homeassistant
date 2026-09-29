@@ -72,6 +72,14 @@ air quality sensor only shows up on devices with that sensor.
 | Switch | Microphone mute, Speaker mute, Do not disturb, Selfview | Selfview disabled by default |
 | Number | Volume | 0–100 |
 | Button | Wake, Standby, Half wake, Hang up, Restart | Half wake disabled by default |
+| Media player | The device itself | Off in standby, playing in a call; power, volume, mute |
+| Calendar | Meetings | Bookings the device knows about (usually today/tomorrow) |
+| Sensor | Next meeting | Current or next booking; start, end, organizer and the full list as attributes |
+| Button | Join meeting | Dials the current/next meeting; unavailable when there is nothing to join |
+
+Meetings are fetched with `xCommand Bookings List` at startup, every five
+minutes and whenever the device sends a `Bookings` event. Calendar entities
+only appear on devices with a calendar (`Status Bookings`).
 
 ## Actions
 
@@ -107,6 +115,12 @@ triggers:
 conditions:
   - "{{ trigger.event.data.event.UserInterface.Extensions.Panel.Clicked.PanelId == 'lights' }}"
 ```
+
+## Discovery
+
+There is none, on purpose: RoomOS devices don't announce themselves over
+mDNS/SSDP (checked on a Desk Mini running RoomOS 26.9), and the Cisco
+`SEP<mac>` DHCP hostnames are shared with desk phones. Add devices by address.
 
 ## Troubleshooting
 

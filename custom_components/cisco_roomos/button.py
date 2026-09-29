@@ -12,8 +12,10 @@ from homeassistant.components.button import (
 )
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .bookings import next_meeting
 from .coordinator import RoomOSConfigEntry
 from .entity import RoomOSEntity, RoomOSEntityDescription
 
@@ -58,6 +60,11 @@ BUTTONS: tuple[RoomOSButtonDescription, ...] = (
 )
 
 
+JOIN_MEETING = ButtonEntityDescription(
+    key="join_meeting", translation_key="join_meeting"
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: RoomOSConfigEntry,
@@ -65,7 +72,10 @@ async def async_setup_entry(
 ) -> None:
     """Add the buttons."""
     coordinator = entry.runtime_data
-    async_add_entities(RoomOSButton(coordinator, d) for d in BUTTONS)
+    entities: list[ButtonEntity] = [RoomOSButton(coordinator, d) for d in BUTTONS]
+    if coordinator.has_bookings:
+        entities.append(RoomOSJoinMeetingButton(coordinator, JOIN_MEETING))
+    async_add_entities(entities)
 
 
 class RoomOSButton(RoomOSEntity, ButtonEntity):
@@ -78,3 +88,25 @@ class RoomOSButton(RoomOSEntity, ButtonEntity):
         await self._command(
             self.entity_description.command, self.entity_description.params
         )
+
+
+class RoomOSJoinMeetingButton(RoomOSEntity, ButtonEntity):
+    """Dial into the meeting in progress or up next."""
+
+    @property
+    def available(self) -> bool:
+        """Only when there is a meeting with dial info."""
+        meeting = next_meeting(self.coordinator.meetings or [])
+        return super().available and meeting is not None and meeting.joinable
+
+    async def async_press(self) -> None:
+        """Dial the meeting's number."""
+        meeting = next_meeting(self.coordinator.meetings or [])
+        if meeting is None or not meeting.joinable:
+            raise HomeAssistantError("No joinable meeting")
+        params: dict[str, Any] = {"Number": meeting.number}
+        if meeting.protocol:
+            params["Protocol"] = meeting.protocol
+        if meeting.booking_id:
+            params["BookingId"] = meeting.booking_id
+        await self._command("Dial", params)

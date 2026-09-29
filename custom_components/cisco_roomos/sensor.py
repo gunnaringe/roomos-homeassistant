@@ -23,6 +23,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
+from .bookings import next_meeting
 from .coordinator import RoomOSConfigEntry
 from .entity import (
     RoomOSEntity,
@@ -252,6 +253,11 @@ SENSORS: tuple[RoomOSSensorDescription, ...] = (
 )
 
 
+NEXT_MEETING = SensorEntityDescription(
+    key="next_meeting", translation_key="next_meeting"
+)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: RoomOSConfigEntry,
@@ -259,11 +265,37 @@ async def async_setup_entry(
 ) -> None:
     """Add the sensors this device supports."""
     coordinator = entry.runtime_data
-    async_add_entities(
+    entities: list[SensorEntity] = [
         RoomOSSensor(coordinator, description)
         for description in SENSORS
         if description.supported(coordinator.data or {})
-    )
+    ]
+    if coordinator.has_bookings:
+        entities.append(RoomOSNextMeetingSensor(coordinator, NEXT_MEETING))
+    async_add_entities(entities)
+
+
+class RoomOSNextMeetingSensor(RoomOSEntity, SensorEntity):
+    """Title of the meeting in progress or up next."""
+
+    @property
+    def native_value(self) -> str | None:
+        """Meeting title."""
+        meeting = next_meeting(self.coordinator.meetings or [])
+        return meeting.title[:255] if meeting else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Times, organizer and the full list the device knows about."""
+        meetings = self.coordinator.meetings or []
+        meeting = next_meeting(meetings)
+        return {
+            "start": meeting.start if meeting else None,
+            "end": meeting.end if meeting else None,
+            "organizer": meeting.organizer if meeting else None,
+            "joinable": meeting.joinable if meeting else False,
+            "meetings": [m.as_dict() for m in meetings],
+        }
 
 
 class RoomOSSensor(RoomOSEntity, SensorEntity):

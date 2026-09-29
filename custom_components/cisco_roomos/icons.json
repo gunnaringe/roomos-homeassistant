@@ -39,6 +39,9 @@
       },
       "ip_address": {
         "default": "mdi:ip-network"
+      },
+      "next_meeting": {
+        "default": "mdi:calendar-account"
       }
     },
     "binary_sensor": {
@@ -107,6 +110,14 @@
       },
       "hang_up": {
         "default": "mdi:phone-hangup"
+      },
+      "join_meeting": {
+        "default": "mdi:video-plus"
+      }
+    },
+    "calendar": {
+      "meetings": {
+        "default": "mdi:calendar-multiple"
       }
     }
   },

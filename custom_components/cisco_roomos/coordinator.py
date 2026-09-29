@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime, timedelta
 import logging
 from typing import Any
 
@@ -10,12 +11,16 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import RoomOSAuthError, RoomOSClient, RoomOSConnectionError, RoomOSError
+from .bookings import Meeting, parse_bookings
 from .const import DOMAIN, EVENT_ROOMOS, RECONNECT_MAX_DELAY, RECONNECT_MIN_DELAY
 
 _LOGGER = logging.getLogger(__name__)
+
+BOOKINGS_INTERVAL = timedelta(minutes=5)
 
 type RoomOSConfigEntry = ConfigEntry[RoomOSCoordinator]
 
@@ -40,6 +45,9 @@ class RoomOSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.client = client
         self._reconnect_task: asyncio.Task[None] | None = None
         self._closing = False
+        self._bookings_task: asyncio.Task[None] | None = None
+        # None = device doesn't support Bookings List (or not loaded yet).
+        self.meetings: list[Meeting] | None = None
         client.on_status = self._on_status
         client.on_event = self._on_event
         client.on_disconnect = self._on_disconnect
@@ -55,6 +63,46 @@ class RoomOSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         except RoomOSError as err:
             raise UpdateFailed(str(err)) from err
 
+    @property
+    def has_bookings(self) -> bool:
+        """Whether the device keeps a calendar."""
+        return "Bookings" in (self.data or {})
+
+    async def async_start_bookings(self) -> None:
+        """Load meetings now, then every few minutes."""
+        if not self.has_bookings:
+            return
+        await self.async_refresh_bookings()
+        self.config_entry.async_on_unload(
+            async_track_time_interval(
+                self.hass, self._scheduled_bookings, BOOKINGS_INTERVAL
+            )
+        )
+
+    async def _scheduled_bookings(self, _now: datetime) -> None:
+        await self.async_refresh_bookings()
+
+    async def async_refresh_bookings(self) -> None:
+        """Fetch the bookings the device knows about."""
+        if not self.client.connected:
+            return
+        try:
+            result = await self.client.command("Bookings List")
+        except RoomOSError as err:
+            _LOGGER.debug(
+                "Bookings List on %s failed: %s", self.config_entry.title, err
+            )
+            return
+        self.meetings = parse_bookings(result)
+        self.async_update_listeners()
+
+    @callback
+    def _schedule_bookings_refresh(self) -> None:
+        if self._bookings_task is None or self._bookings_task.done():
+            self._bookings_task = self.config_entry.async_create_background_task(
+                self.hass, self.async_refresh_bookings(), f"{DOMAIN} bookings"
+            )
+
     async def async_shutdown(self) -> None:
         """Stop reconnecting and close the socket."""
         self._closing = True
@@ -69,6 +117,8 @@ class RoomOSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     @callback
     def _on_event(self, event: dict[str, Any]) -> None:
+        if "Bookings" in event and self.has_bookings:
+            self._schedule_bookings_refresh()
         devices = dr.async_entries_for_config_entry(
             dr.async_get(self.hass), self.config_entry.entry_id
         )
@@ -108,4 +158,6 @@ class RoomOSCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 continue
             _LOGGER.info("Reconnected to %s", self.config_entry.title)
             self.async_set_updated_data(status)
+            if self.has_bookings:
+                self._schedule_bookings_refresh()
             return

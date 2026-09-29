@@ -23,6 +23,11 @@ installed through HACS as a custom repository. Primarily developed by Claude.
   `strings.json` **and** `translations/en.json` (keep them identical), and an
   icon in `icons.json`. Don't add other translations — entity IDs are
   generated from the system language and the user wants them in English.
+- `bookings.py` — parses `Bookings List` into `Meeting`s. The coordinator
+  keeps `meetings` (refreshed at start, every 5 min, on `Bookings` events and
+  after reconnect); calendar, next-meeting sensor and join button read it.
+  They exist only when the Status tree has `Bookings`.
+- `media_player.py` — standby = off, active call = playing.
 - `services.py` — `command`, `set_configuration`, `dial`, all targeting a
   `device_id`. One entry per device; unique ID = serial number.
 

@@ -125,6 +125,26 @@
       },
       "ip_address": {
         "name": "IP address"
+      },
+      "next_meeting": {
+        "name": "Next meeting",
+        "state_attributes": {
+          "start": {
+            "name": "Start"
+          },
+          "end": {
+            "name": "End"
+          },
+          "organizer": {
+            "name": "Organizer"
+          },
+          "joinable": {
+            "name": "Joinable"
+          },
+          "meetings": {
+            "name": "Meetings"
+          }
+        }
       }
     },
     "binary_sensor": {
@@ -187,6 +207,14 @@
       },
       "hang_up": {
         "name": "Hang up"
+      },
+      "join_meeting": {
+        "name": "Join meeting"
+      }
+    },
+    "calendar": {
+      "meetings": {
+        "name": "Meetings"
       }
     }
   },
