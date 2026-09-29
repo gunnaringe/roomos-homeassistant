@@ -25,6 +25,21 @@ def test_merge_nested_values() -> None:
     assert status == {"Audio": {"Volume": 40, "VolumeMute": "Off"}}
 
 
+def test_merge_reports_changes() -> None:
+    """Empty fragments and repeated values are no-ops."""
+    status = {"Audio": {"Volume": 30}}
+    assert not merge_status(status, {"Diagnostics": {}})
+    assert not merge_status(
+        status, {"Spark": {"UserServices": {"MessageReceived": {}}}}
+    )
+    assert not merge_status(status, {"Audio": {"Volume": 30}})
+    assert "Diagnostics" not in status
+    assert merge_status(status, {"Audio": {"Volume": 31}})
+    assert merge_status(status, {"Call": [{"id": 1, "Status": "Ringing"}]})
+    assert not merge_status(status, {"Call": [{"id": 1, "Status": "Ringing"}]})
+    assert merge_status(status, {"Call": [{"id": 1, "ghost": "True"}]})
+
+
 def test_merge_instances_and_ghosts() -> None:
     """List instances merge by id; ghosts remove them."""
     status: dict = {}
@@ -67,10 +82,13 @@ async def test_connect_subscribes_and_merges(device: FakeRoomOS) -> None:
             "xFeedback/Subscribe",
             "xFeedback/Subscribe",
         ]
+        await device.push({"Diagnostics": {}})
+        await asyncio.sleep(0.05)
+        assert not updates
         await device.push({"Audio": {"Volume": 55}})
         await asyncio.sleep(0.05)
         assert client.status["Audio"]["Volume"] == 55
-        assert updates
+        assert len(updates) == 1
     finally:
         await client.close()
         await session.close()

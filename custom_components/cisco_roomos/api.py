@@ -60,18 +60,37 @@ class RoomOSCommandError(RoomOSError):
         super().__init__(f"{method} failed: {message}")
 
 
-def merge_status(target: dict[str, Any], update: dict[str, Any]) -> None:
-    """Merge a feedback fragment into the cached status tree, in place."""
+def merge_status(target: dict[str, Any], update: dict[str, Any]) -> bool:
+    """Merge a feedback fragment into the cached tree; True if anything changed.
+
+    The device sends a steady stream of empty fragments (``{"Diagnostics":
+    {}}``, Spark keep-alives, ...); those are no-ops.
+    """
+    changed = False
     for key, value in update.items():
         if isinstance(value, list):
             current = target.get(key)
             if not isinstance(current, list):
                 current = [] if current is None else [current]
-            target[key] = _merge_instances(current, value)
-        elif isinstance(value, dict) and isinstance(target.get(key), dict):
-            merge_status(target[key], value)
-        else:
-            target[key] = copy.deepcopy(value)
+            before = copy.deepcopy(current)
+            merged = _merge_instances(current, value)
+            if merged != before:
+                target[key] = merged
+                changed = True
+        elif isinstance(value, dict):
+            if not value:
+                continue
+            if isinstance(target.get(key), dict):
+                changed |= merge_status(target[key], value)
+            else:
+                node: dict[str, Any] = {}
+                if merge_status(node, value):
+                    target[key] = node
+                    changed = True
+        elif target.get(key) != value:
+            target[key] = value
+            changed = True
+    return changed
 
 
 def _merge_instances(current: list[Any], update: list[Any]) -> list[Any]:
@@ -261,10 +280,12 @@ class RoomOSClient:
             return
         params = dict(message.get("params") or {})
         params.pop("Id", None)
-        if isinstance(status := params.get("Status"), dict):
-            merge_status(self._status, status)
-            if self.on_status is not None:
-                self.on_status(self._status)
+        if (
+            isinstance(status := params.get("Status"), dict)
+            and merge_status(self._status, status)
+            and self.on_status is not None
+        ):
+            self.on_status(self._status)
         if isinstance(event := params.get("Event"), dict) and self.on_event:
             self.on_event(event)
 
