@@ -1,0 +1,30 @@
+# Weekly dependency updates: one grouped PR per ecosystem for minor/patch,
+# majors as separate PRs.
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Oslo
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+    groups:
+      uv-minor-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Oslo
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    groups:
+      github-actions-minor-patch:
+        update-types: [minor, patch]
