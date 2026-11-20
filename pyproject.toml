@@ -43,3 +43,8 @@ combine-as-imports = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+
+[tool.uv]
+# pytest-homeassistant-custom-component pins homeassistant 2026.10.4, which pins
+# Pillow 12.3.0 (many CVEs, test-only). HA 2026.11 ships Pillow 13.0.0.
+override-dependencies = ["pillow>=13.0.0"]
